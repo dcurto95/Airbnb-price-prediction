@@ -1,4 +1,6 @@
 import math
+import time
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -49,7 +51,7 @@ def one_hot(df, att, metadata=None):
 
 
 def label_encoding_all_cat_features(df, metadata=None):
-    cat_atts = df.select_dtypes(exclude=np.number).columns.to_list()
+    cat_atts = df.select_dtypes(exclude=[np.number, np.datetime64]).columns.to_list()
     map_ = {}
     for cat_att in cat_atts:
         map_ = {**map_, **label_encoding(df, cat_att, metadata)}
@@ -90,7 +92,7 @@ def fix_missing_values_from_dataset(dataset):
                     if math.isnan(value):
                         dataset.at[index, column_name] = mean
         else:
-            dataset[column_name] = dataset[column_name].astype(str)
+            # dataset[column_name] = dataset[column_name].astype(str)
             values, count = np.unique(dataset[column_name], return_counts=True)
             most_common_value = values[np.argmax(count)]
 
@@ -111,6 +113,7 @@ def fix_missing_values_from_dataset(dataset):
 def preprocess_dataset(dataset, to_numerical='oh', norm_technique="minmax", metadata=None):
     fix_missing_values_from_dataset(dataset)
     class_column_name = dataset.columns.to_list()[-1]
+    date_to_timestamp(dataset)
 
     if norm_technique == "z-score":
         z_score_all_num_features(dataset)
@@ -155,3 +158,16 @@ def parse_metadata(metadata):
                     values.append(spl[i])
             d[att] = values
     return d
+
+
+def date_to_timestamp(df):
+    cat_atts = df.select_dtypes(include=np.datetime64).columns.to_list()
+
+    for cat_att in cat_atts:
+        last_review = datetime.timestamp(np.max(df[cat_att]))
+
+        mean = np.mean(df[cat_att])
+        ind = np.where(pd.isnull(df[cat_att]))
+        df.loc[ind[0], cat_att] = mean
+        df[cat_att] = df[cat_att].transform(lambda x: (last_review - datetime.timestamp(x))/(24*3600))
+    return df
