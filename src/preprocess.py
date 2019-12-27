@@ -6,20 +6,22 @@ import numpy as np
 import pandas as pd
 
 
-def z_score_all_num_features(df):
+def z_score_all_num_features(df, exclude_norm_cols=[]):
     num_atts = df.select_dtypes(include=np.number).columns.to_list()
     for num_att in num_atts:
-        df.loc[:, num_att] = z_score_normalization(df.loc[:, num_att])
+        if num_att not in exclude_norm_cols:
+            df.loc[:, num_att] = z_score_normalization(df.loc[:, num_att])
 
 
 def z_score_normalization(array):
     return ((array - array.mean()) / array.std()).astype(np.float)
 
 
-def minmax_all_num_features(df):
+def minmax_all_num_features(df, exclude_norm_cols=[]):
     num_atts = df.select_dtypes(include=np.number).columns.to_list()
     for num_att in num_atts:
-        df.loc[:, num_att] = minmax(df.loc[:, num_att])
+        if num_att not in exclude_norm_cols:
+            df.loc[:, num_att] = minmax(df.loc[:, num_att])
 
 
 def minmax(array):
@@ -110,15 +112,15 @@ def fix_missing_values_from_dataset(dataset):
                     dataset.at[index, column_name] = most_common_value
 
 
-def preprocess_dataset(dataset, to_numerical='oh', norm_technique="minmax", metadata=None):
+def preprocess_dataset(dataset, to_numerical='oh', norm_technique="minmax", metadata=None, exclude_norm_cols=[]):
     fix_missing_values_from_dataset(dataset)
     class_column_name = dataset.columns.to_list()[-1]
     date_to_timestamp(dataset)
 
     if norm_technique == "z-score":
-        z_score_all_num_features(dataset)
+        z_score_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
     else:
-        minmax_all_num_features(dataset)
+        minmax_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
 
     if to_numerical == 'oh':
         one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)

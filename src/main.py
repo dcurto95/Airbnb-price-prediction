@@ -11,9 +11,10 @@ if __name__ == '__main__':
     data_df = data_df.drop(columns=data_df.columns[:4])
     data_df['last_review'] = pd.to_datetime(data_df['last_review'])
 
-    preprocess.preprocess_dataset(data_df, to_numerical='le', norm_technique='z-score')
+    preprocess.preprocess_dataset(data_df, to_numerical='le', norm_technique='z-score',
+                                  exclude_norm_cols=['number_of_reviews', 'last_review', 'reviews_per_month'])
     print(data_df.isnull().values.any())
     data = data_df.to_numpy()
 
-    #train_test_split()
-    #print(data_df.head())
+    # train_test_split()
+    # print(data_df.head())
