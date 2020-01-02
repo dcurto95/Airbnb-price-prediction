@@ -13,15 +13,15 @@ from others import paths
 
 
 class Trainer:
-    def __init__(self, device, model, train_loader, val_loader, args):
+    def __init__(self, device, model, train_loader, val_loader, args=None):
         self.device = device
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.args = args
 
-        # TODO save optimizer to resume
-        self.optimizer = optim.SGD(self.model.parameters(), lr=args.learning_rate, momentum=0.9, weight_decay=args.weight_decay)
+        # TODO choose optimizer and scheduler?
+        self.optimizer = optim.SGD(self.model.parameters(), lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
         self.scheduler = None
 
         self.from_epoch = 0
@@ -311,7 +311,7 @@ class Trainer:
 
 
 class Tester:
-    def __init__(self, device, model, test_loader, args):
+    def __init__(self, device, model, test_loader, args=None):
         self.device = device
         self.model = model
         self.test_loader = test_loader
