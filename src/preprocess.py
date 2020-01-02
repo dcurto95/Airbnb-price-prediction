@@ -113,9 +113,9 @@ def fix_missing_values_from_dataset(dataset):
 
 
 def preprocess_dataset(dataset, to_numerical='oh', norm_technique="minmax", metadata=None, exclude_norm_cols=[]):
-    fix_missing_values_from_dataset(dataset)
+    #fix_missing_values_from_dataset(dataset)
+
     class_column_name = dataset.columns.to_list()[-1]
-    date_to_timestamp(dataset)
 
     if norm_technique == "z-score":
         z_score_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
@@ -132,6 +132,15 @@ def preprocess_dataset(dataset, to_numerical='oh', norm_technique="minmax", meta
     else:
         raise ValueError("Expected None, \'oh\' or \'le\' for to_numerical parameter, obtained " + to_numerical)
     return d
+
+
+def clean_dataframe(dataset):
+    zero_reviews_index = np.where(dataset['number_of_reviews'] == 0)[0]
+    dataset.at[zero_reviews_index, 'reviews_per_month'] = 0
+    dataset.at[zero_reviews_index, 'last_review'] = np.min(dataset['last_review'])
+
+    date_to_timestamp(dataset)
+    return dataset
 
 
 def preprocess_for_plot(dataset):
