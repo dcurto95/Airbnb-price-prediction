@@ -45,9 +45,9 @@ def one_hot(df, att, metadata=None):
 
     for value in uniques:
         if type(value) == str:
-            df[att + '_' + value] = (values.to_numpy().astype(str) == value).astype(np.int)
+            df.insert(df.shape[1] - 1, att + '_' + value, (values.to_numpy().astype(str) == value).astype(np.int))
         else:
-            df[att + '_' + str(value.decode("utf-8"))] = (values == value).astype(np.int)
+            df.insert(df.shape[1] - 1, att + '_' + str(value.decode("utf-8")), (values == value).astype(np.int))
 
     df.drop(columns=[att], inplace=True)
 
@@ -112,26 +112,20 @@ def fix_missing_values_from_dataset(dataset):
                     dataset.at[index, column_name] = most_common_value
 
 
-def preprocess_dataset(dataset, to_numerical='oh', norm_technique="minmax", metadata=None, exclude_norm_cols=[]):
-    #fix_missing_values_from_dataset(dataset)
+def preprocess_dataset(dataset, norm_technique="minmax", metadata=None, exclude_norm_cols=[]):
+    cols = dataset.columns.tolist()
+    cols.insert(len(cols), cols.pop(cols.index('price')))
+    dataset = dataset.reindex(columns=cols)
 
-    class_column_name = dataset.columns.to_list()[-1]
-
+    exclude_norm_cols.append('price')
     if norm_technique == "z-score":
         z_score_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
     else:
         minmax_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
 
-    if to_numerical == 'oh':
-        one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
-        d = label_encoding(dataset, class_column_name, metadata=metadata)
-    elif to_numerical == 'le':
-        d = label_encoding_all_cat_features(dataset, metadata=metadata)
-    elif to_numerical is None:
-        d = label_encoding(dataset, class_column_name, metadata=metadata)
-    else:
-        raise ValueError("Expected None, \'oh\' or \'le\' for to_numerical parameter, obtained " + to_numerical)
-    return d
+    one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
+
+    return dataset
 
 
 def clean_dataframe(dataset):
@@ -180,5 +174,5 @@ def date_to_timestamp(df):
         mean = np.mean(df[cat_att])
         ind = np.where(pd.isnull(df[cat_att]))
         df.loc[ind[0], cat_att] = mean
-        df[cat_att] = df[cat_att].transform(lambda x: (last_review - datetime.timestamp(x))/(24*3600))
+        df[cat_att] = df[cat_att].transform(lambda x: (last_review - datetime.timestamp(x)) / (24 * 3600))
     return df
