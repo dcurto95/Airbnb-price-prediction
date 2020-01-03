@@ -32,6 +32,13 @@ if __name__ == '__main__':
     data_y = data_df_y.to_numpy()
 
     x_train, x_test, y_train, y_test = train_test_split(data_x, data_y, test_size=0.33, random_state=42)
-    pc = regression.linear_regression(x_train, y_train, x_test, y_test)
-    print("\nRegression Pearson Correlation:", pc)
+
+    mse_lr, r2_lr = regression.linear_regression(x_train, y_train, x_test, y_test)
+    print('Mean squared error linear regression: %.2f' % mse_lr)
+    print('Coefficient of determination linear regression: %.2f' % r2_lr)
+
+    mse_svr, r2_svr  = regression.svr(x_train, y_train, x_test, y_test)
+    print('Mean squared error SVR: %.2f' % mse_svr)
+    print('Coefficient of determination SVR: %.2f' % r2_svr)
+
     # print(data_df.head())
