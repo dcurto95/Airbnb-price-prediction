@@ -1,11 +1,9 @@
 import pandas as pd
-from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 
 import data_exploration
 import preprocess
 import regression
-import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     data_df = pd.read_csv("../data/AB_NYC_2019.csv")
@@ -17,10 +15,10 @@ if __name__ == '__main__':
     data_df['last_review'] = pd.to_datetime(data_df['last_review'])
 
     # data_df = preprocess.clean_dataframe(data_df)
-    # data_df.to_csv(r'../data/AB_NYC_2019_cleaned.csv')
+    # data_df.to_csv(r'../data/AB_NYC_2019_cleaned.csv', index=False)
 
-    data_df = preprocess.preprocess_dataset(data_df, norm_technique='z-score')# ,
-                                  #exclude_norm_cols=['number_of_reviews', 'last_review', 'reviews_per_month'])
+    data_df = preprocess.preprocess_dataset(data_df, norm_technique='z-score')  # ,
+    # exclude_norm_cols=['number_of_reviews', 'last_review', 'reviews_per_month'])
 
     # data_exploration.show_missing_data(data_df)
     # data_exploration.plot_correlation(data_df)

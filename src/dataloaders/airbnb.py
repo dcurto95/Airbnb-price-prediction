@@ -15,7 +15,7 @@ class AIRBNB(Dataset):
 
         data_df = pd.read_csv(os.path.join(path, data_set))
 
-        preprocess.preprocess_dataset(data_df, to_numerical='oh', norm_technique='z-score')
+        preprocess.preprocess_dataset(data_df, norm_technique='z-score')
         self.data = data_df.to_numpy()
         self.n_features = self.data.shape[1]
 
