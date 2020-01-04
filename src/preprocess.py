@@ -176,3 +176,17 @@ def date_to_timestamp(df):
         df.loc[ind[0], cat_att] = mean
         df[cat_att] = df[cat_att].transform(lambda x: (last_review - datetime.timestamp(x)) / (24 * 3600))
     return df
+
+
+def removal_of_price_outliers(features, values, feature_base):
+    new_values = values[feature_base.astype(np.bool)]
+    # defining quartiles and interquartile range
+    first_quantile = np.quantile(new_values, 0.25)
+    third_quantile = np.quantile(new_values, 0.75)
+    IQR = third_quantile - first_quantile
+
+    indexs = np.where((new_values < (first_quantile - 1.5 * IQR)) | (new_values > (third_quantile + 1.5 * IQR)))[0]
+    print("Outliers:", len(indexs))
+    trimmed_features = np.delete(features, indexs, axis=0)
+    trimmed_values = np.delete(values, indexs, axis=0)
+    return trimmed_features, trimmed_values
