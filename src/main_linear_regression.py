@@ -1,5 +1,6 @@
 import time
 
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -13,6 +14,8 @@ if __name__ == '__main__':
     data_exploration.show_missing_data(data_df)
     # data_df = data_df.drop(columns=data_df.columns[:4])
     data_df = data_df.drop(columns=['neighbourhood'])
+    wrong_price_ids = np.where(data_df['price'] == 0)[0]
+    data_df = data_df.drop(wrong_price_ids)
     # data_exploration.show_data_exploration(data_df)
     # data_df['last_review'] = pd.to_datetime(data_df['last_review'])
 
