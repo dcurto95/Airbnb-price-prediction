@@ -1,4 +1,4 @@
-from models.mlp import MLP
+from models import mlp
 from trainer import Trainer, Tester
 
 import torch
@@ -13,10 +13,11 @@ args = {
     'n_epochs': 10000,
     'run_name': run_name,
 
-    'lr': 8e-5,
-    'momentum': 0.9,
+    'lr': 1e-2,
+    # 'momentum': 0.9,
 
-    'hidden': [10, 1]
+    'hidden': [50, 50, 50, 50, 1],
+    'activation': mlp.TANH
 
 
 }
@@ -48,7 +49,7 @@ print('Running on ' + device.type)
 
 # TODO DAVIDS Check that it is able to run in GPU
 
-model = MLP(n_features, n_hidden_units=args['hidden'])
+model = mlp.MLP(n_features, n_hidden_units=args['hidden'], activation_function=args['activation'])
 
 # MultiGPU
 # if torch.cuda.device_count() > 1:

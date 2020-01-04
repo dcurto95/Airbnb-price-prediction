@@ -2,6 +2,8 @@ import time
 import math
 import os
 import copy
+
+
 from utils import save_model, load_model, create_log_dirs
 import torch
 import torch.optim as optim
@@ -17,8 +19,8 @@ class Trainer:
         self.args = args
 
         # TODO choose optimizer and scheduler?
-        self.optimizer = optim.SGD(self.model.parameters(), lr=args['lr'], momentum=args['momentum'])  # , weight_decay=args.weight_decay)
-        self.scheduler = None
+        self.optimizer = optim.Adam(self.model.parameters(), lr=args['lr'])  #, weight_decay=1e-4)
+        # self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=75, gamma=0.1)
         self.criterion = torch.nn.functional.mse_loss
 
         self.best_epoch = None
@@ -26,8 +28,8 @@ class Trainer:
         self.best_val_loss = float("Inf")
 
         logs_path = create_log_dirs(args['run_name'])
-        self.train_writer = SummaryWriter(os.path.join(logs_path, args['run_name'], 'train'))
-        self.val_writer = SummaryWriter(os.path.join(logs_path, args['run_name'], 'val'))
+        self.train_writer = SummaryWriter(os.path.join(logs_path, 'train'))
+        self.val_writer = SummaryWriter(os.path.join(logs_path, 'val'))
 
         self.print_each_train_batch = 20
 
@@ -64,8 +66,10 @@ class Trainer:
                 loss = self.criterion(prediction, gt)
                 loss.backward()
                 self.optimizer.step()
+                # self.scheduler.step()
 
-                epoch_train_loss.append(loss.item())
+                loss2 = self.criterion(torch.exp(prediction), torch.exp(gt))
+                epoch_train_loss.append(loss2.item())
                 # if ((ii + 1) % self.print_each_train_batch == 0) or (ii == 0) or (ii == n_train_iterations - 1):
                 #     print("Iteration {:4}/{:4} | loss: {:05f} | Time spent: {:10.4f}ms".
                 #           format(ii + 1, n_train_iterations, loss, (time.time() - since_it)*1000))
@@ -80,10 +84,10 @@ class Trainer:
             self.train_writer.add_scalar('loss', epoch_train_loss, epoch + 1)
             self.val_writer.add_scalar('loss', epoch_val_loss, epoch + 1)
 
-            print()
+            # print()
             print('End of Epoch {}/{} | time: {}s | train loss: {} | val loss: {}'.
                   format(epoch + 1, self.args['n_epochs'], time.time() - since_epoch, epoch_train_loss, epoch_val_loss))
-            print()
+            # print()
 
             # Save best model
             # if epoch_val_loss < self.best_val_loss:
@@ -107,7 +111,7 @@ def validate(model, loader, device, criterion):
 
             gt = gt.to(device)
 
-            loss = criterion(prediction, gt)
+            loss = criterion(torch.exp(prediction), torch.exp(gt))
 
             epoch_val_loss.append(loss.item())
     return epoch_val_loss
