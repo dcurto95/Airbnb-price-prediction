@@ -40,11 +40,11 @@ class Trainer:
         for epoch in range(self.args['n_epochs']):
             since_epoch = time.time()
 
-            print('Starting Epoch {}/{}'.format(epoch + 1, self.args['n_epochs'] + 1))
-            print()
+            # print('Starting Epoch {}/{}'.format(epoch + 1, self.args['n_epochs']))
+            # print()
 
             # ########## TRAIN LOOP ##########
-            print('Training...')
+            # print('Training...')
             self.model.train()
 
             epoch_train_loss = []
@@ -66,12 +66,12 @@ class Trainer:
                 self.optimizer.step()
 
                 epoch_train_loss.append(loss.item())
-                if ((ii + 1) % self.print_each_train_batch == 0) or (ii == 0) or (ii == n_train_iterations - 1):
-                    print("Iteration {:4}/{:4} | loss: {:05f} | Time spent: {:10.4f}ms".
-                          format(ii + 1, n_train_iterations, loss, (time.time() - since_it)*1000))
-            print()
+                # if ((ii + 1) % self.print_each_train_batch == 0) or (ii == 0) or (ii == n_train_iterations - 1):
+                #     print("Iteration {:4}/{:4} | loss: {:05f} | Time spent: {:10.4f}ms".
+                #           format(ii + 1, n_train_iterations, loss, (time.time() - since_it)*1000))
+            # print()
 
-            print("Validating...")
+            # print("Validating...")
             epoch_val_loss = validate(self.model, self.val_loader, self.device, self.criterion)
 
             epoch_train_loss = sum(epoch_train_loss) / len(epoch_train_loss)
@@ -82,15 +82,15 @@ class Trainer:
 
             print()
             print('End of Epoch {}/{} | time: {}s | train loss: {} | val loss: {}'.
-                  format(epoch + 1, self.args['n_epochs'] + 1, time.time() - since_epoch, epoch_train_loss, epoch_val_loss))
+                  format(epoch + 1, self.args['n_epochs'], time.time() - since_epoch, epoch_train_loss, epoch_val_loss))
             print()
 
             # Save best model
-            if epoch_val_loss < self.best_val_loss:
-                self.best_val_loss = epoch_val_loss
-                self.best_model_state = copy.deepcopy(self.model.state_dict())
-                self.best_epoch = epoch
-                save_model(self.best_model_state, self.args['run_name'], epoch_train_loss, epoch_val_loss)
+            # if epoch_val_loss < self.best_val_loss:
+            #     self.best_val_loss = epoch_val_loss
+            #     self.best_model_state = copy.deepcopy(self.model.state_dict())
+            #     self.best_epoch = epoch
+            #     save_model(self.best_model_state, self.args['run_name'], epoch_train_loss, epoch_val_loss)
 
         print('Training completed. Elapsed time: {}s | Best validation loss: {}'.
               format(time.time() - since, self.best_val_loss))

@@ -10,11 +10,13 @@ run_name = "Test Rafel"
 
 run_name = run_name + datetime.now().strftime('_%Y-%m-%d_%H-%M-%S')
 args = {
-    'n_epochs': 100,
+    'n_epochs': 10000,
     'run_name': run_name,
 
-    'lr': 1e-6,
-    'momentum': 0.9
+    'lr': 8e-5,
+    'momentum': 0.9,
+
+    'hidden': [10, 1]
 
 
 }
@@ -25,10 +27,10 @@ train_mode = True
 print('Preparing datasets...')
 
 if train_mode:
-    train_set = AIRBNB(path='../data/', data_set='train.csv')
-    val_set = AIRBNB(path='../data/', data_set='val.csv')
-    train_loader = DataLoader(train_set, batch_size=1024, shuffle=True, num_workers=4, pin_memory=True)
-    val_loader = DataLoader(val_set, batch_size=len(val_set), shuffle=False, num_workers=4, pin_memory=True)
+    train_set = AIRBNB(path='../data/', data_set='AB_NYC_2019_cleaned.csv')
+    val_set = AIRBNB(path='../data/', data_set='AB_NYC_2019_cleaned.csv')
+    train_loader = DataLoader(train_set, batch_size=len(train_set), shuffle=True, num_workers=0, pin_memory=True)
+    val_loader = DataLoader(val_set, batch_size=len(val_set), shuffle=False, num_workers=0, pin_memory=True)
     test_loader = None
     n_features = train_set.get_n_features()
 
@@ -46,7 +48,7 @@ print('Running on ' + device.type)
 
 # TODO DAVIDS Check that it is able to run in GPU
 
-model = MLP(n_features)
+model = MLP(n_features, n_hidden_units=args['hidden'])
 
 # MultiGPU
 # if torch.cuda.device_count() > 1:

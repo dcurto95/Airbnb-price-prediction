@@ -1,6 +1,7 @@
 from torch.utils.data import Dataset
 import torch
 import os
+import numpy as np
 import pandas as pd
 
 import preprocess
@@ -15,15 +16,15 @@ class AIRBNB(Dataset):
 
         data_df = pd.read_csv(os.path.join(path, data_set))
 
-        preprocess.preprocess_dataset(data_df, norm_technique='z-score')
+        data_df = preprocess.preprocess_dataset(data_df, norm_technique='z-score')
         self.data = data_df.to_numpy()
-        self.n_features = self.data.shape[1]
+        self.n_features = self.data.shape[1] - 1
 
     def __len__(self):
         return self.data.shape[0]
 
     def __getitem__(self, index):
-        return torch.tensor(self.data[index, :-1]), torch.tensor(self.data[index, -1])
+        return torch.FloatTensor(self.data[index, :-1].astype(np.float32)), torch.FloatTensor([self.data[index, -1].astype(np.float32)])
 
     def get_n_features(self):
         return self.n_features
