@@ -1,5 +1,10 @@
+import time
+import matplotlib.pyplot as plt
+
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 
@@ -130,21 +135,36 @@ for c in num_cols:
     df.drop(columns=c, inplace=True)
 
 
-target = df['log_price'].copy()
+target = df['log_price'].copy().to_numpy()
 
-features = df.drop(['log_price'], axis=1).copy()
-
-mlp = MLPRegressor(activation='relu', max_iter=1000)
+features = df.drop(['log_price'], axis=1).copy().to_numpy()
 
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.20, random_state=1)
 
+
+print("\nLinear regression:")
+
+reg = LinearRegression().fit(X_train, y_train)
+y_pred = reg.predict(X_test)
+mse_reg = mean_squared_error(np.exp(y_test), np.exp(y_pred))
+r2_reg = r2_score(y_test, np.maximum(y_pred, 3))
+
+plt.scatter(np.maximum(y_pred, 3), y_test)
+plt.show()
+
+print('\tMean squared error linear regression: %.2f' % mse_reg)
+print('\tCoefficient of determination linear regression: %.2f' % r2_reg)
+
+print("\nMulti Layer Perceptron:")
+mlp = MLPRegressor(activation='relu', max_iter=1000)
 mlp.fit(X_train, y_train)
 predictions = mlp.predict(X_test)
 
-mse = np.mean((np.exp(predictions) - np.exp(y_test))**2)
+mse_mlp = mean_squared_error(np.exp(y_test), np.exp(predictions))
+r2_mlp = r2_score(y_test, predictions)
 
-print("Mean square error: " + str(mse))
-
+print('\tMean squared error linear regression: %.2f' % mse_mlp)
+print('\tCoefficient of determination linear regression: %.2f' % r2_mlp)
 
 # for c in features.columns:
 #     features_red = features.drop(columns=[c]).copy()
