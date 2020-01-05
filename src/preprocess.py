@@ -31,13 +31,16 @@ def minmax(array):
 def one_hot_all_cat_features(df, avoid_class=False, metadata=None):
     cat_atts = df.select_dtypes(exclude=np.number).columns.to_list()
     cat_atts = cat_atts if not avoid_class or np.issubdtype(df.dtypes[-1], np.number) else cat_atts[:-1]
+
+    new_encoded_attributes = []
     for cat_att in cat_atts:
-        one_hot(df, cat_att, metadata)
+        new_encoded_attributes.append(one_hot(df, cat_att, metadata))
+    return new_encoded_attributes
 
 
 def one_hot(df, att, metadata=None):
     values = df[att]
-
+    new_encoded_columns = []
     if metadata and att in metadata:
         uniques = metadata[att]
     else:
@@ -46,10 +49,13 @@ def one_hot(df, att, metadata=None):
     for value in uniques:
         if type(value) == str:
             df.insert(df.shape[1] - 1, att + '_' + value, (values.to_numpy().astype(str) == value).astype(np.int))
+            new_encoded_columns.append(att + '_' + value)
         else:
             df.insert(df.shape[1] - 1, att + '_' + str(value.decode("utf-8")), (values == value).astype(np.int))
+            new_encoded_columns.append(att + '_' + str(value.decode("utf-8")))
 
     df.drop(columns=[att], inplace=True)
+    return new_encoded_columns
 
 
 def label_encoding_all_cat_features(df, metadata=None):
@@ -123,9 +129,9 @@ def preprocess_dataset(dataset, norm_technique="minmax", metadata=None, exclude_
     else:
         minmax_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
 
-    one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
+    new_features = one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
 
-    return dataset
+    return dataset, new_features
 
 
 def clean_dataframe(dataset):

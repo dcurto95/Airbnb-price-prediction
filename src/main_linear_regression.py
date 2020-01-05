@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
     data_exploration.show_missing_data(data_df)
     # data_df = data_df.drop(columns=data_df.columns[:4])
+    data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
     data_df = data_df.drop(columns=['neighbourhood'])
     wrong_price_ids = np.where(data_df['price'] == 0)[0]
     data_df = data_df.drop(wrong_price_ids)
@@ -48,7 +49,7 @@ if __name__ == '__main__':
 
     # plot.show_all()
 
-    data_df = preprocess.preprocess_dataset(data_df, norm_technique='z-score')  # ,
+    data_df, new_feature_cols = preprocess.preprocess_dataset(data_df, norm_technique='z-score')  # ,
     # exclude_norm_cols=['number_of_reviews', 'last_review', 'reviews_per_month'])
 
     # data_exploration.show_missing_data(data_df)
@@ -63,8 +64,7 @@ if __name__ == '__main__':
     data_df_y = data_df['price']
     data_df_x = data_df.drop(columns=['price'])
 
-    neighbourhood_cols = ['neighbourhood_group_Bronx', 'neighbourhood_group_Brooklyn', 'neighbourhood_group_Manhattan',
-                          'neighbourhood_group_Queens', 'neighbourhood_group_Staten Island']
+    neighbourhood_cols = new_feature_cols[0]
     neighbourhood_indexs = [list(data_df_x.columns).index(name) for name in neighbourhood_cols]
 
     data_x = data_df_x.to_numpy()
