@@ -23,8 +23,11 @@ def load_model(run_name):
     return weights, train_loss, val_loss
 
 
-def create_log_dirs(run_name):
+def create_log_dirs(args):
+    run_name = args['run_name']
     path = os.path.join('..', 'logs', run_name)
     if not os.path.exists(path):
         os.makedirs(path)
+    with open(os.path.join(path, 'config.txt'), 'w') as f:
+        f.write(str(args))
     return path

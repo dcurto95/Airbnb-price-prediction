@@ -13,13 +13,16 @@ args = {
     'n_epochs': 10000,
     'run_name': run_name,
 
-    'lr': 1e-2,
-    # 'momentum': 0.9,
+    'optimizer': 'SGD',
+    'lr': 1e-4,
+    'momentum': 0.9,
 
-    'hidden': [50, 50, 50, 50, 1],
-    'activation': mlp.TANH
+    'scheduler': {'gamma': 0.5, 'milestones': [5, 100, 200, 300, 400, 500, 600, 700, 800]},
 
+    'batch_size': 'all',
 
+    'hidden': [500, 500, 250, 50, 1],
+    'activation': mlp.RELU
 }
 
 train_mode = True

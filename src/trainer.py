@@ -19,15 +19,15 @@ class Trainer:
         self.args = args
 
         # TODO choose optimizer and scheduler?
-        self.optimizer = optim.Adam(self.model.parameters(), lr=args['lr'])  #, weight_decay=1e-4)
-        # self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=75, gamma=0.1)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=args['lr'], momentum=args['momentum'])
+        self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=args['scheduler']['milestones'], gamma=args['scheduler']['gamma'])
         self.criterion = torch.nn.functional.mse_loss
 
         self.best_epoch = None
         self.best_model_state = None
         self.best_val_loss = float("Inf")
 
-        logs_path = create_log_dirs(args['run_name'])
+        logs_path = create_log_dirs(args)
         self.train_writer = SummaryWriter(os.path.join(logs_path, 'train'))
         self.val_writer = SummaryWriter(os.path.join(logs_path, 'val'))
 
@@ -66,7 +66,7 @@ class Trainer:
                 loss = self.criterion(prediction, gt)
                 loss.backward()
                 self.optimizer.step()
-                # self.scheduler.step()
+                self.scheduler.step()
 
                 loss2 = self.criterion(torch.exp(prediction), torch.exp(gt))
                 epoch_train_loss.append(loss2.item())
