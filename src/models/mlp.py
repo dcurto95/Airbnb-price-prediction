@@ -7,7 +7,7 @@ SIGMOID = 3
 
 
 class MLP(nn.Module):
-    def __init__(self, n_input_features, n_hidden_units=(100, 50, 20, 1), activation_function=LEAKY_RELU):
+    def __init__(self, n_input_features, n_hidden_units=(100, 50, 20, 1), activation_function=RELU):
         super().__init__()
 
         layers = [nn.Linear(n_input_features, n_hidden_units[0])]

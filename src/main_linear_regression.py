@@ -8,6 +8,7 @@ import data_exploration
 import plot
 import preprocess
 import regression
+import mlp_regressor
 
 if __name__ == '__main__':
     data_df = pd.read_csv("../data/AB_NYC_2019_cleaned.csv")
@@ -79,6 +80,7 @@ if __name__ == '__main__':
     for neighbourhood_ind in neighbourhood_indexs:
         x_train, y_train = preprocess.removal_of_price_outliers(x_train, y_train, x_train[:, neighbourhood_ind])
 
+    mlp_regressor.do_mlp_regressor(x_train ,y_train, x_test, y_test)
     print("\nLinear regression:")
     since = time.time()
     mse_lr, r2_lr = regression.linear_regression(x_train, y_train, x_test, y_test)
