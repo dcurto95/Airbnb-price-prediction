@@ -29,7 +29,10 @@ def create_preprocessed_csv(data_df, title):
     # Separate into X, y
     train, test = train_test_split(data_df, test_size=0.3, random_state=64)
 
+    validation, test = train_test_split(test, test_size=0.5, random_state=64)
+
     train.to_csv(r'../data/train_' + title + '.csv', index=False)
+    validation.to_csv(r'../data/validation_' + title + '.csv', index=False)
     test.to_csv(r'../data/test_' + title + '.csv', index=False)
 
 
@@ -51,7 +54,7 @@ if __name__ == '__main__':
         data_df_cleaned = pd.read_csv('../data/AB_NYC_2019_cleaned.csv')
         print("Original cleaned shape", data_df_cleaned.shape)
         data_df_fuzzy = pd.read_csv('../data/AB_NYC_2019_fuzzy.csv')
-        print("Original cleaned shape", data_df_fuzzy.shape)
+        print("Original fuzzy shape", data_df_fuzzy.shape)
 
         create_preprocessed_csv(data_df_cleaned, 'cleaned')
         create_preprocessed_csv(data_df_fuzzy, 'fuzzy')
