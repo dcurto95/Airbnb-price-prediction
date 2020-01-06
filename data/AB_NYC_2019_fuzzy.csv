@@ -23160,7 +23160,6 @@ Manhattan,"Midtown",40.75403,-73.96343,Entire home/apt,225,30,2.01604938271605,4
 Brooklyn,"Crown Heights",40.67305,-73.94788,Private room,90,1,2.01604938271605,2,179
 Manhattan,"Murray Hill",40.74863,-73.9767,Entire home/apt,150,30,2.01604938271605,50,365
 Manhattan,"East Harlem",40.80324,-73.9352,Entire home/apt,120,2,5.5,1,11
-Brooklyn,"Bedford-Stuyvesant",40.69023,-73.95428,Private room,0,4,2.01604938271605,4,28
 Brooklyn,"Greenpoint",40.72463,-73.95227,Private room,65,5,2.09117647058823,1,0
 Brooklyn,"Greenpoint",40.72357,-73.95057,Entire home/apt,225,2,2.23406593406593,1,34
 Brooklyn,"Williamsburg",40.71627,-73.93957,Private room,100,7,3.62489967165268,1,365
@@ -25432,7 +25431,6 @@ Queens,"Richmond Hill",40.70171,-73.82991,Entire home/apt,65,2,8.29265938531877,
 Manhattan,"Theater District",40.76302,-73.98211,Entire home/apt,239,3,8.37810945273631,1,0
 Manhattan,"Hell's Kitchen",40.76181,-73.98865,Private room,110,3,8.46121768140116,2,128
 Manhattan,"Upper West Side",40.77345,-73.98774,Private room,89,10,2.01604938271605,1,248
-Bronx,"East Morrisania",40.83296,-73.88668,Private room,0,2,8.42259225922592,4,127
 Brooklyn,"Bedford-Stuyvesant",40.67907,-73.94916,Entire home/apt,150,2,5.5,2,86
 Queens,"Corona",40.74748,-73.8647,Shared room,45,1,5.5,6,365
 Manhattan,"Morningside Heights",40.81012,-73.95825,Private room,55,1,2.01604938271605,1,0
@@ -25633,7 +25631,6 @@ Brooklyn,"Bushwick",40.70141,-73.92368,Private room,55,1,2.01604938271605,1,0
 Brooklyn,"Crown Heights",40.66543,-73.95439,Entire home/apt,105,2,8.42259225922592,1,18
 Manhattan,"Flatiron District",40.73969,-73.98962,Entire home/apt,495,1,7.85622932745315,1,343
 Brooklyn,"Cypress Hills",40.69006,-73.86917,Entire home/apt,34,2,8.27938829787234,2,247
-Brooklyn,"Bushwick",40.69467,-73.92433,Private room,0,2,5.5,5,0
 Manhattan,"Midtown",40.75751,-73.96464,Entire home/apt,233,90,2.01604938271605,1,365
 Manhattan,"Upper East Side",40.76834,-73.95647,Private room,85,30,3.18454426299195,1,305
 Manhattan,"Lower East Side",40.71898,-73.98472,Private room,133,2,2.01604938271605,1,0
@@ -25752,7 +25749,6 @@ Manhattan,"Midtown",40.75212,-73.96975,Private room,82,30,2.01604938271605,2,326
 Queens,"Astoria",40.76398,-73.91974,Private room,90,5,2.23406593406593,1,83
 Manhattan,"East Harlem",40.80924,-73.93873,Entire home/apt,172,2,8.47049180327869,1,0
 Brooklyn,"Williamsburg",40.70739,-73.94726,Private room,60,6,2.01604938271605,2,254
-Brooklyn,"Greenpoint",40.72462,-73.94072,Private room,0,2,2.01604938271605,2,0
 Manhattan,"Washington Heights",40.84131,-73.93574,Private room,52,2,2.01604938271605,1,0
 Brooklyn,"Crown Heights",40.66978,-73.94454,Entire home/apt,184,2,5.8351689612015,1,0
 Manhattan,"Chinatown",40.71618,-73.99225,Entire home/apt,145,4,5.5,1,68
@@ -25777,7 +25773,6 @@ Brooklyn,"Bushwick",40.70763,-73.92223,Private room,90,1,2.01604938271605,1,0
 Manhattan,"East Village",40.72132,-73.98068,Private room,83,2,2.01604938271605,2,0
 Brooklyn,"Bedford-Stuyvesant",40.68163,-73.95558,Private room,37,7,2.01604938271605,2,71
 Manhattan,"Harlem",40.82736,-73.95292,Private room,65,1,7.53079399141631,1,81
-Brooklyn,"Williamsburg",40.70838,-73.94645,Entire home/apt,0,5,2.01604938271605,1,73
 Brooklyn,"Crown Heights",40.67502,-73.95732,Entire home/apt,100,1,2.23406593406593,1,0
 Manhattan,"Midtown",40.76033,-73.96946,Entire home/apt,270,1,8.47049180327869,3,234
 Brooklyn,"East Flatbush",40.65312,-73.93413,Private room,35,30,2.01604938271605,4,263
@@ -25793,9 +25788,6 @@ Manhattan,"Lower East Side",40.7147,-73.98994,Entire home/apt,400,3,5.5,1,26
 Queens,"Astoria",40.77326,-73.92677,Private room,50,4,2.01604938271605,1,0
 Manhattan,"Upper West Side",40.78696,-73.97293,Shared room,125,3,2.01604938271605,1,0
 Queens,"Sunnyside",40.74317,-73.92532,Entire home/apt,140,3,7.24709418837675,1,42
-Brooklyn,"Bedford-Stuyvesant",40.68173,-73.91342,Private room,0,1,8.32529789184234,6,176
-Brooklyn,"Bedford-Stuyvesant",40.68279,-73.9117,Private room,0,1,8.34460837491864,6,232
-Brooklyn,"Bedford-Stuyvesant",40.68258,-73.91284,Private room,0,1,8.34039517014269,6,222
 Manhattan,"Greenwich Village",40.73056,-73.99357,Entire home/apt,99,1,2.01604938271605,1,0
 Brooklyn,"Williamsburg",40.70942,-73.94897,Private room,105,2,8.35074626865672,2,46
 Manhattan,"Lower East Side",40.72008,-73.98786,Entire home/apt,139,5,5.5,1,25
@@ -26258,7 +26250,6 @@ Manhattan,"Upper East Side",40.77751,-73.95575,Private room,65,4,2.0160493827160
 Brooklyn,"Williamsburg",40.71469,-73.93971,Private room,80,3,2.23406593406593,1,0
 Queens,"Astoria",40.76759,-73.92463,Private room,50,1,8.47049180327869,1,115
 Queens,"Flushing",40.74893,-73.82046,Private room,60,1,7.36985887096775,6,359
-Manhattan,"Murray Hill",40.75091,-73.97597,Entire home/apt,0,3,2.01604938271605,1,0
 Brooklyn,"Kensington",40.64674,-73.97947,Private room,137,3,2.01604938271605,3,0
 Brooklyn,"Sunset Park",40.66232,-73.9939,Entire home/apt,150,3,5.23475252794039,1,83
 Manhattan,"Washington Heights",40.84594,-73.94039,Private room,65,2,2.01604938271605,1,0
@@ -26840,7 +26831,6 @@ Manhattan,"East Village",40.72615,-73.98303,Private room,120,10,7.30289141802522
 Queens,"Jamaica",40.66934,-73.77269,Private room,68,1,6.06069636135508,3,13
 Manhattan,"Harlem",40.82096,-73.9531,Private room,55,2,2.01604938271605,1,0
 Brooklyn,"Bushwick",40.7005,-73.93827,Private room,49,2,5.5,1,0
-Brooklyn,"Bushwick",40.69211,-73.9067,Shared room,0,30,5.5,6,333
 Brooklyn,"Williamsburg",40.71528,-73.95365,Private room,55,2,8.47049180327869,1,30
 Brooklyn,"Crown Heights",40.67433,-73.92824,Entire home/apt,298,3,5.91244839631628,1,265
 Brooklyn,"Bushwick",40.69731,-73.90824,Shared room,29,30,2.23406593406593,6,324
@@ -26865,7 +26855,6 @@ Queens,"Jamaica",40.69933,-73.81436,Private room,50,2,8.36151452282157,4,108
 Brooklyn,"Canarsie",40.64185,-73.91509,Entire home/apt,160,2,2.01604938271605,1,191
 Brooklyn,"Williamsburg",40.70529,-73.9331,Entire home/apt,300,1,2.84826503923278,2,347
 Manhattan,"East Harlem",40.79242,-73.94178,Private room,70,4,5.98580441640379,1,80
-Brooklyn,"Bushwick",40.69166,-73.90928,Shared room,0,30,5.5,6,139
 Queens,"Cambria Heights",40.6939,-73.73104,Private room,130,2,2.01604938271605,2,0
 Queens,"Cambria Heights",40.69358,-73.73,Private room,120,2,2.01604938271605,2,0
 Manhattan,"Hell's Kitchen",40.76197,-73.98961,Entire home/apt,200,1,8.47049180327869,1,200
