@@ -6,8 +6,11 @@ import preprocess
 
 
 def create_preprocessed_csv(data_df, title):
-    logged_cols = ['minimum_nights', 'number_of_reviews', 'reviews_per_month', 'last_review',
-                   'calculated_host_listings_count', 'availability_365']
+    if title != 'fuzzy':
+        logged_cols = ['minimum_nights', 'number_of_reviews', 'reviews_per_month', 'last_review',
+                       'calculated_host_listings_count', 'availability_365']
+    else:
+        logged_cols = ['minimum_nights', 'calculated_host_listings_count', 'availability_365']
     for col in logged_cols:
         data_df[col] = np.log(data_df[col] + 1)
     data_df['price'] = np.log(data_df.price)
@@ -37,7 +40,7 @@ def create_preprocessed_csv(data_df, title):
 
 
 if __name__ == '__main__':
-    export_clean_data = True
+    export_clean_data = False
 
     if export_clean_data:
         data_df = pd.read_csv('../data/AB_NYC_2019.csv')
