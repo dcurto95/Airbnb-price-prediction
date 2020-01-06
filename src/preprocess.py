@@ -28,23 +28,20 @@ def minmax(array):
     return ((array - array.min()) / (array.max() - array.min())).astype(np.float)
 
 
-def one_hot_all_cat_features(df, avoid_class=False, metadata=None):
+def one_hot_all_cat_features(df, avoid_class=False):
     cat_atts = df.select_dtypes(exclude=np.number).columns.to_list()
     cat_atts = cat_atts if not avoid_class or np.issubdtype(df.dtypes[-1], np.number) else cat_atts[:-1]
 
     new_encoded_attributes = []
     for cat_att in cat_atts:
-        new_encoded_attributes.append(one_hot(df, cat_att, metadata))
+        new_encoded_attributes.append(one_hot(df, cat_att))
     return new_encoded_attributes
 
 
-def one_hot(df, att, metadata=None):
+def one_hot(df, att):
     values = df[att]
     new_encoded_columns = []
-    if metadata and att in metadata:
-        uniques = metadata[att]
-    else:
-        uniques = np.unique(values)
+    uniques = np.unique(values)
 
     for value in uniques:
         if type(value) == str:
@@ -58,20 +55,17 @@ def one_hot(df, att, metadata=None):
     return new_encoded_columns
 
 
-def label_encoding_all_cat_features(df, metadata=None):
+def label_encoding_all_cat_features(df):
     cat_atts = df.select_dtypes(exclude=[np.number, np.datetime64]).columns.to_list()
     map_ = {}
     for cat_att in cat_atts:
-        map_ = {**map_, **label_encoding(df, cat_att, metadata)}
+        map_ = {**map_, **label_encoding(df, cat_att)}
     return map_
 
 
-def label_encoding(df, att, metadata=None):
+def label_encoding(df, att):
     values = df[att].to_numpy()
-    if metadata and att in metadata:
-        uniques = metadata[att]
-    else:
-        uniques = np.unique(values)
+    uniques = np.unique(values)
     sub_map = {}
     for i in range(len(uniques)):
         value = uniques[i]
@@ -118,26 +112,26 @@ def fix_missing_values_from_dataset(dataset):
                     dataset.at[index, column_name] = most_common_value
 
 
-def preprocess_dataset(dataset, norm_technique="minmax", metadata=None, exclude_norm_cols=[]):
+def preprocess_dataset(dataset, class_col, norm_technique="minmax", exclude_norm_cols=[]):
     cols = dataset.columns.tolist()
-    cols.insert(len(cols), cols.pop(cols.index('price')))
+    cols.insert(len(cols), cols.pop(cols.index(class_col)))
     dataset = dataset.reindex(columns=cols)
 
-    exclude_norm_cols.append('price')
+    exclude_norm_cols.append(class_col)
     if norm_technique == "z-score":
         z_score_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
     else:
         minmax_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
 
-    new_features = one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
+    new_features = one_hot_all_cat_features(dataset, avoid_class=True)
 
     return dataset, new_features
 
 
 def clean_dataframe(dataset):
     zero_reviews_index = np.where(dataset['number_of_reviews'] == 0)[0]
-    dataset.at[zero_reviews_index, 'reviews_per_month'] = 0
-    dataset.at[zero_reviews_index, 'last_review'] = np.min(dataset['last_review'])
+    dataset.loc[(dataset['number_of_reviews'] == 0), 'reviews_per_month'] = 0
+    dataset.loc[(dataset['number_of_reviews'] == 0), 'last_review'] = np.min(dataset['last_review'])
 
     date_to_timestamp(dataset)
     return dataset
@@ -150,49 +144,26 @@ def preprocess_for_plot(dataset):
     return dataset
 
 
-def array_to_dataframe(data, index, columns, classes):
-    dataframe = pd.DataFrame(data=data, index=index, columns=columns)
-    dataframe["classes"] = classes
-    return dataframe
-
-
-def parse_metadata(metadata):
-    d = {}
-    lines = str(metadata).split("\n")
-    for line in lines:
-        if 'nominal' in line:
-            values = []
-            spl = line.split('\'')
-            att = spl[0][1:]
-            for i in range(2, len(spl) - 1):
-                if i % 2 == 0:
-                    values.append(spl[i])
-            d[att] = values
-    return d
-
-
 def date_to_timestamp(df):
-    cat_atts = df.select_dtypes(include=np.datetime64).columns.to_list()
+    date_atts = df.select_dtypes(include=np.datetime64).columns.to_list()
 
-    for cat_att in cat_atts:
-        last_review = datetime.timestamp(np.max(df[cat_att]))
+    for date_att in date_atts:
+        last_review = datetime.timestamp(np.max(df[date_att]))
 
-        mean = np.mean(df[cat_att])
-        ind = np.where(pd.isnull(df[cat_att]))
-        df.loc[ind[0], cat_att] = mean
-        df[cat_att] = df[cat_att].transform(lambda x: (last_review - datetime.timestamp(x)) / (24 * 3600))
+        mean = np.mean(df[date_att])
+        ind = np.where(pd.isnull(df[date_att]))
+        df.loc[ind[0], date_att] = mean
+        df[date_att] = df[date_att].transform(lambda x: (last_review - datetime.timestamp(x)) / (24 * 3600))
     return df
 
 
-def removal_of_price_outliers(features, values, feature_base):
-    new_values = values[feature_base.astype(np.bool)]
+def removal_of_outliers(df, nhood, distance):
+    new_piece = df[df["neighbourhood_group"] == nhood]["log_price"]
     # defining quartiles and interquartile range
-    first_quantile = np.quantile(new_values, 0.25)
-    third_quantile = np.quantile(new_values, 0.75)
-    IQR = third_quantile - first_quantile
+    q1 = new_piece.quantile(0.25)
+    q3 = new_piece.quantile(0.75)
+    IQR = q3 - q1
 
-    indexs = np.where((new_values < (first_quantile - 1.5 * IQR)) | (new_values > (third_quantile + 1.5 * IQR)))[0]
-    print("Outliers:", len(indexs))
-    trimmed_features = np.delete(features, indexs, axis=0)
-    trimmed_values = np.delete(values, indexs, axis=0)
-    return trimmed_features, trimmed_values
+    trimmed = df[(df["neighbourhood_group"] == nhood) & (df.log_price > (q1 - distance * IQR)) & (
+                df.log_price < (q3 + distance * IQR))]
+    return trimmed
