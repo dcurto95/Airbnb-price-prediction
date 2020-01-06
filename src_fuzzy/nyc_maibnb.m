@@ -1,8 +1,8 @@
 clear all; close all;
 T = readtable('../data/AB_NYC_2019_cleaned.csv');
-n_reviews = T.number_of_reviews;
-reviews_month = T.reviews_per_month;
-last_review = T.last_review;
+n_reviews = table2array(T(:, 8));
+reviews_month = table2array(T(:, 10));
+last_review = table2array(T(:, 9));
 
 %{
 hist(n_reviews, 100);
