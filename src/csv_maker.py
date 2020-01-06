@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 import preprocess
 
 
-def create_preprocessed_csv(data_df, title):
+def create_preprocessed_csv(data_df, title, with_neighbourhood=True):
     if title != 'fuzzy':
         logged_cols = ['minimum_nights', 'number_of_reviews', 'reviews_per_month', 'last_review',
                        'calculated_host_listings_count', 'availability_365']
@@ -24,8 +24,9 @@ def create_preprocessed_csv(data_df, title):
     data_df = df_without_outliers
 
     # Change neighbourhood_group and neighbourhood
-    # data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
-    # data_df = data_df.drop(columns=['neighbourhood'])
+    if not with_neighbourhood:
+        data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
+        data_df = data_df.drop(columns=['neighbourhood'])
 
     # Normalize numerical and One-Hot categorical
     data_df = preprocess.preprocess_dataset(data_df, norm_technique='z-score', exclude_norm_cols=['price'])
@@ -34,9 +35,14 @@ def create_preprocessed_csv(data_df, title):
 
     validation, test = train_test_split(test, test_size=0.5, random_state=64)
 
-    train.to_csv(r'../data/train_' + title + '.csv', index=False)
-    validation.to_csv(r'../data/validation_' + title + '.csv', index=False)
-    test.to_csv(r'../data/test_' + title + '.csv', index=False)
+    if with_neighbourhood:
+        train.to_csv(r'../data/train_' + title + '.csv', index=False)
+        validation.to_csv(r'../data/validation_' + title + '.csv', index=False)
+        test.to_csv(r'../data/test_' + title + '.csv', index=False)
+    else:
+        train.to_csv(r'../data/train_' + title + '_wo_Neigh.csv', index=False)
+        validation.to_csv(r'../data/validation_' + title + '_wo_Neigh.csv', index=False)
+        test.to_csv(r'../data/test_' + title + '_wo_Neigh.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -61,3 +67,5 @@ if __name__ == '__main__':
 
         create_preprocessed_csv(data_df_cleaned, 'cleaned')
         create_preprocessed_csv(data_df_fuzzy, 'fuzzy')
+        create_preprocessed_csv(data_df_cleaned, 'cleaned', with_neighbourhood=False)
+        create_preprocessed_csv(data_df_fuzzy, 'fuzzy', with_neighbourhood=False)
