@@ -6,10 +6,14 @@ from torch.utils.data import DataLoader
 from dataloaders.airbnb import AIRBNB
 from datetime import datetime
 
-run_name = "Test Rafel"
+
+train_mode = True
+run_name = "Test_Pilotes"
 
 run_name = run_name + datetime.now().strftime('_%Y-%m-%d_%H-%M-%S')
 args = {
+    'fuzzy': False,
+
     'n_epochs': 10000,
     'run_name': run_name,
 
@@ -17,22 +21,22 @@ args = {
     'lr': 1e-4,
     'momentum': 0.9,
 
-    'scheduler': {'gamma': 0.5, 'milestones': [5, 100, 200, 300, 400, 500, 600, 700, 800]},
+    # 'scheduler': {'gamma': 0.5, 'milestones': [5, 100, 200, 300, 400, 500, 600, 700, 800]},
 
     'batch_size': 'all',
 
-    'hidden': [500, 500, 250, 50, 1],
+    'hidden': [500, 250, 50, 1],
     'activation': mlp.RELU
 }
 
-train_mode = True
+dataset_name = 'fuzzy' if args['fuzzy'] else 'cleaned'
 
 # ########## DATASETS AND DATALOADERS ##########
 print('Preparing datasets...')
 
 if train_mode:
-    train_set = AIRBNB(path='../data/', data_set='AB_NYC_2019_cleaned.csv')
-    val_set = AIRBNB(path='../data/', data_set='AB_NYC_2019_cleaned.csv')
+    train_set = AIRBNB(path='../data/', data_set='train_' + dataset_name + '.csv')
+    val_set = AIRBNB(path='../data/', data_set='validation_' + dataset_name + '.csv')
     train_loader = DataLoader(train_set, batch_size=len(train_set), shuffle=True, num_workers=0, pin_memory=True)
     val_loader = DataLoader(val_set, batch_size=len(val_set), shuffle=False, num_workers=0, pin_memory=True)
     test_loader = None
@@ -40,7 +44,7 @@ if train_mode:
 
 else:
     train_loader, val_loader = None, None
-    test_set = AIRBNB(path='../data/', data_set='test.csv')
+    test_set = AIRBNB(path='../data/', data_set='test_' + dataset_name + '.csv')
     test_loader = DataLoader(test_set, batch_size=len(test_set), shuffle=False, num_workers=4, pin_memory=True)
     n_features = test_set.get_n_features()
 

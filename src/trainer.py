@@ -20,7 +20,7 @@ class Trainer:
 
         # TODO choose optimizer and scheduler?
         self.optimizer = optim.SGD(self.model.parameters(), lr=args['lr'], momentum=args['momentum'])
-        self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=args['scheduler']['milestones'], gamma=args['scheduler']['gamma'])
+        # self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=args['scheduler']['milestones'], gamma=args['scheduler']['gamma'])
         self.criterion = torch.nn.functional.mse_loss
 
         self.best_epoch = None
@@ -31,31 +31,23 @@ class Trainer:
         self.train_writer = SummaryWriter(os.path.join(logs_path, 'train'))
         self.val_writer = SummaryWriter(os.path.join(logs_path, 'val'))
 
-        self.print_each_train_batch = 20
+        self.print_each_epochs = 25
 
     def train_model(self):
         # ########## TRAIN VAL LOOP ##########
         since = time.time()
-        n_train_iterations = int(math.ceil(len(self.train_loader.dataset) / self.train_loader.batch_size))
-        n_val_iterations = int(math.ceil(len(self.val_loader.dataset) / self.val_loader.batch_size))
 
         for epoch in range(self.args['n_epochs']):
             since_epoch = time.time()
 
-            # print('Starting Epoch {}/{}'.format(epoch + 1, self.args['n_epochs']))
-            # print()
-
             # ########## TRAIN LOOP ##########
-            # print('Training...')
             self.model.train()
 
             epoch_train_loss = []
 
             for ii, (features, gt) in enumerate(self.train_loader):
-                since_it = time.time()
 
                 # Move all data to device and forward pass
-                # batch_size, n_features = features.shape
                 features = features.to(self.device)
                 prediction = self.model(features)
 
@@ -66,16 +58,12 @@ class Trainer:
                 loss = self.criterion(prediction, gt)
                 loss.backward()
                 self.optimizer.step()
-                self.scheduler.step()
+                # self.scheduler.step()
 
                 loss2 = self.criterion(torch.exp(prediction), torch.exp(gt))
                 epoch_train_loss.append(loss2.item())
-                # if ((ii + 1) % self.print_each_train_batch == 0) or (ii == 0) or (ii == n_train_iterations - 1):
-                #     print("Iteration {:4}/{:4} | loss: {:05f} | Time spent: {:10.4f}ms".
-                #           format(ii + 1, n_train_iterations, loss, (time.time() - since_it)*1000))
-            # print()
 
-            # print("Validating...")
+            # ########## VAL LOOP ##########
             epoch_val_loss = validate(self.model, self.val_loader, self.device, self.criterion)
 
             epoch_train_loss = sum(epoch_train_loss) / len(epoch_train_loss)
@@ -84,10 +72,9 @@ class Trainer:
             self.train_writer.add_scalar('loss', epoch_train_loss, epoch + 1)
             self.val_writer.add_scalar('loss', epoch_val_loss, epoch + 1)
 
-            # print()
-            print('End of Epoch {}/{} | time: {}s | train loss: {} | val loss: {}'.
-                  format(epoch + 1, self.args['n_epochs'], time.time() - since_epoch, epoch_train_loss, epoch_val_loss))
-            # print()
+            if (epoch + 1) % self.print_each_epochs == 0 or epoch == 0 or epoch == (self.args['n_epochs'] - 1):
+                print('Epoch {:5}/{:5} | time: {:7.4f}s | Train MSE loss: {:10.4f} | Val MSE loss: {:10.4f}'.format(epoch + 1, self.args['n_epochs'], time.time() - since_epoch,
+                                                                                                                    epoch_train_loss, epoch_val_loss))
 
             # Save best model
             # if epoch_val_loss < self.best_val_loss:
