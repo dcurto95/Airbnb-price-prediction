@@ -10,6 +10,10 @@ def do_mlp_regressor(x_train, y_train, x_test, y_test):
                        max_iter=1000, verbose=False)
     mlp.fit(x_train, y_train)
     y_pred = mlp.predict(x_test)
+
+    y_pred[(y_pred < 0)] = 0
+    y_pred[(y_pred > 10)] = np.max(y_pred[(y_pred < 10)])
+
     # MSE, R2
     mse = mean_squared_error(np.exp(y_test), np.exp(y_pred))
     r2 = r2_score(y_test, y_pred)
