@@ -9,8 +9,8 @@ def linear_regression(x_train, y_train, x_test, y_test):
     reg = LinearRegression().fit(x_train, y_train)
     # Predict using x_test
     y_pred = reg.predict(x_test)
-    mse = mean_squared_error(y_test, np.exp(y_pred))
-    r2 = r2_score(np.log(y_test), y_pred)
+    mse = mean_squared_error(np.exp(y_test), np.exp(np.maximum(y_pred, 0)))
+    r2 = r2_score(y_test, np.maximum(y_pred, 0))
     return mse, r2
 
 
@@ -20,6 +20,6 @@ def svr(x_train, y_train, x_test, y_test):
     # Predict using x_test
     y_pred = reg_svr.predict(x_test)
     # MSE, R2
-    mse = mean_squared_error(y_test, np.exp(y_pred))
-    r2 = r2_score(np.log(y_test), y_pred)
+    mse = mean_squared_error(np.exp(y_test), np.exp(y_pred))
+    r2 = r2_score(y_test, y_pred)
     return mse, r2
