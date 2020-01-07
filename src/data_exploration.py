@@ -109,6 +109,15 @@ def plot_most_popular_neighbourhood(data):
     plt.xlabel("Number of guest Who host in this Area")
     plt.barh(x, y)
 
+def plot_data_distribution(data, columns):
+
+    for i in columns:
+        curr_col = data[i]
+        print("---------", i ,"----------")
+        print("Mean: ", data[i].mean())
+        print("Std: ", data[i].std())
+        data.hist(column=i, bins=25, grid=False, figsize=(12, 8))
+
 
 def show_data_exploration(data):
     # TODO: Utilizar mateixa paleta de color + titols a totes les figures

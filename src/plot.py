@@ -519,5 +519,13 @@ def plot_bar(x, ys, col_labels, x_ticks, title):
     fig.tight_layout()
 
 
+def plot_histograms(values, titles):
+    fig, axs = plt.subplots(2, 3, tight_layout=True)
+    if len(values) == len(titles):
+        for i, ax in enumerate(axs.flat):
+            ax.hist(values[i], bins=30)
+            ax.set_title(titles[i])
+
+
 def show_all():
     plt.show()
