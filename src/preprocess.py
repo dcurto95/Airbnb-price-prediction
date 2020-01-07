@@ -112,7 +112,7 @@ def fix_missing_values_from_dataset(dataset):
                     dataset.at[index, column_name] = most_common_value
 
 
-def preprocess_dataset(dataset, norm_technique="minmax", metadata=None, exclude_norm_cols=[]):
+def preprocess_dataset(dataset, norm_technique="minmax", metadata=None, exclude_norm_cols=[], to_numerical='oh'):
     cols = dataset.columns.tolist()
     cols.insert(len(cols), cols.pop(cols.index('price')))
     dataset = dataset.reindex(columns=cols)
@@ -123,7 +123,17 @@ def preprocess_dataset(dataset, norm_technique="minmax", metadata=None, exclude_
     else:
         minmax_all_num_features(dataset, exclude_norm_cols=exclude_norm_cols)
 
-    one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
+    class_column_name = 'price'
+    if to_numerical == 'oh':
+        one_hot_all_cat_features(dataset, avoid_class=True, metadata=metadata)
+        d = label_encoding(dataset, class_column_name, metadata=metadata)
+    elif to_numerical == 'le':
+        d = label_encoding_all_cat_features(dataset, metadata=metadata)
+    elif to_numerical is None:
+        d = label_encoding(dataset, class_column_name, metadata=metadata)
+    else:
+        raise ValueError("Expected None, \'oh\' or \'le\' for to_numerical parameter, obtained " + to_numerical)
+    #return d
 
     return dataset
 
