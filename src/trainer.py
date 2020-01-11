@@ -1,13 +1,12 @@
-import time
-import math
-import os
 import copy
+import os
+import time
 
-
-from utils import save_model, load_model, create_log_dirs
 import torch
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
+
+from utils import save_model, load_model, create_log_dirs
 
 
 class Trainer:
@@ -18,11 +17,7 @@ class Trainer:
         self.val_loader = val_loader
         self.args = args
 
-        # TODO choose optimizer and scheduler?
-        # self.optimizer = optim.SGD(self.model.parameters(), lr=args['lr'], momentum=args['momentum'])
         self.optimizer = optim.Adam(self.model.parameters(), lr=args['lr'], weight_decay=1e-4)
-        # self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=args['scheduler']['milestones'], gamma=args['scheduler']['gamma'])
-        # self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=args['scheduler']['step_size'], gamma=args['scheduler']['gamma'])
         self.criterion = torch.nn.functional.mse_loss
 
         self.best_epoch = None
@@ -48,7 +43,6 @@ class Trainer:
             epoch_train_loss = []
 
             for ii, (features, gt) in enumerate(self.train_loader):
-
                 # Move all data to device and forward pass
                 features = features.to(self.device)
                 prediction = self.model(features)
@@ -60,7 +54,6 @@ class Trainer:
                 loss = self.criterion(prediction, gt)
                 loss.backward()
                 self.optimizer.step()
-                # self.scheduler.step()
 
                 loss2 = self.criterion(torch.exp(prediction), torch.exp(gt))
                 epoch_train_loss.append(loss2.item())
@@ -75,8 +68,9 @@ class Trainer:
             self.val_writer.add_scalar('loss', epoch_val_loss, epoch + 1)
 
             if (epoch + 1) % self.print_each_epochs == 0 or epoch == 0 or epoch == (self.args['n_epochs'] - 1):
-                print('Epoch {:5}/{:5} | time: {:7.4f}s | Train MSE loss: {:10.4f} | Val MSE loss: {:10.4f}'.format(epoch + 1, self.args['n_epochs'], time.time() - since_epoch,
-                                                                                                                    epoch_train_loss, epoch_val_loss))
+                print('Epoch {:5}/{:5} | time: {:7.4f}s | Train MSE loss: {:10.4f} | Val MSE loss: {:10.4f}'.format(
+                    epoch + 1, self.args['n_epochs'], time.time() - since_epoch,
+                    epoch_train_loss, epoch_val_loss))
 
             # Save best model
             if epoch_val_loss < self.best_val_loss:
@@ -117,9 +111,12 @@ class Tester:
         state, train_loss, val_loss = load_model(args['model'])
         self.model.load_state_dict(state)
         self.model = self.model.to(self.device)
-        print('Testing model  ' + args['model'] + '.\nThis model obtained Training Loss = {:.4f} | Validation Loss = {:.4f}'.format(train_loss, val_loss))
+        print('Testing model  ' + args[
+            'model'] + '.\nThis model obtained Training Loss = {:.4f} | Validation Loss = {:.4f}'.format(train_loss,
+                                                                                                         val_loss))
 
     def test(self):
         since = time.time()
         test_loss = validate(self.model, self.test_loader, self.device, self.criterion)
-        print('Total time spent: {:.0f}s | Mean test MSE: {:.4f}'.format(time.time() - since, sum(test_loss)/len(test_loss)))
+        print('Total time spent: {:.0f}s | Mean test MSE: {:.4f}'.format(time.time() - since,
+                                                                         sum(test_loss) / len(test_loss)))

@@ -2,18 +2,10 @@ import time
 
 import pandas as pd
 
-import mlp_regressor
 import regression
 
 
 def do_regressions(x_train, y_train, x_test, y_test):
-    print("\nMLP regressor:")
-    since = time.time()
-    mse_lr, r2_lr = mlp_regressor.do_mlp_regressor(x_train, y_train, x_test, y_test)
-    print('\tMean squared error linear regression: %.2f' % mse_lr)
-    print('\tCoefficient of determination linear regression: %.2f' % r2_lr)
-    print("\tExecution time:", time.time() - since, "s")
-
     print("\nLinear regression:")
     since = time.time()
     mse_lr, r2_lr = regression.linear_regression(x_train, y_train, x_test, y_test)
