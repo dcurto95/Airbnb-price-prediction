@@ -7,29 +7,37 @@ from dataloaders.airbnb import AIRBNB
 from datetime import datetime
 
 
-train_mode = True
-run_name = "Test_Pilotes"
+train_mode = False
+run_name = "Best"
 
 run_name = run_name + datetime.now().strftime('_%Y-%m-%d_%H-%M-%S')
+# Test_Pilotes_2020-01-07_22-30-16
+# Test_Pilotes_2020-01-07_20-56-05
+# Best_2020-01-11_10-39-32
 args = {
-    'fuzzy': False,
+    'model': 'Best_2020-01-11_10-39-32',
 
-    'n_epochs': 10000,
+    'fuzzy': False,
+    'neigh': True,
+
+    'n_epochs': 1000,
     'run_name': run_name,
 
-    'optimizer': 'SGD',
-    'lr': 1e-4,
-    'momentum': 0.9,
+    'optimizer': 'Adam',
+    'lr': 5e-4,
+    # 'momentum': 0.9,
 
-    # 'scheduler': {'gamma': 0.5, 'milestones': [5, 100, 200, 300, 400, 500, 600, 700, 800]},
+    # 'scheduler': {'gamma': 0.3, 'milestones': [150]},
+    # 'scheduler': {'gamma': 0.3, 'step_size': 100},
 
-    'batch_size': 'all',
+    'batch_size': 250,
 
-    'hidden': [500, 250, 50, 1],
+    'hidden': [300, 1],
     'activation': mlp.RELU
 }
 
 dataset_name = 'fuzzy' if args['fuzzy'] else 'cleaned'
+dataset_name = dataset_name if args['neigh'] else dataset_name + '_wo_Neigh'
 
 # ########## DATASETS AND DATALOADERS ##########
 print('Preparing datasets...')
@@ -37,7 +45,7 @@ print('Preparing datasets...')
 if train_mode:
     train_set = AIRBNB(path='../data/', data_set='train_' + dataset_name + '.csv')
     val_set = AIRBNB(path='../data/', data_set='validation_' + dataset_name + '.csv')
-    train_loader = DataLoader(train_set, batch_size=len(train_set), shuffle=True, num_workers=0, pin_memory=True)
+    train_loader = DataLoader(train_set, batch_size=args['batch_size'], shuffle=True, num_workers=0, pin_memory=True)
     val_loader = DataLoader(val_set, batch_size=len(val_set), shuffle=False, num_workers=0, pin_memory=True)
     test_loader = None
     n_features = train_set.get_n_features()
@@ -45,7 +53,7 @@ if train_mode:
 else:
     train_loader, val_loader = None, None
     test_set = AIRBNB(path='../data/', data_set='test_' + dataset_name + '.csv')
-    test_loader = DataLoader(test_set, batch_size=len(test_set), shuffle=False, num_workers=4, pin_memory=True)
+    test_loader = DataLoader(test_set, batch_size=len(test_set), shuffle=False, num_workers=0, pin_memory=True)
     n_features = test_set.get_n_features()
 
 

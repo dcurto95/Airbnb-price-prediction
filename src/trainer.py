@@ -19,8 +19,10 @@ class Trainer:
         self.args = args
 
         # TODO choose optimizer and scheduler?
-        self.optimizer = optim.SGD(self.model.parameters(), lr=args['lr'], momentum=args['momentum'])
+        # self.optimizer = optim.SGD(self.model.parameters(), lr=args['lr'], momentum=args['momentum'])
+        self.optimizer = optim.Adam(self.model.parameters(), lr=args['lr'], weight_decay=1e-4)
         # self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=args['scheduler']['milestones'], gamma=args['scheduler']['gamma'])
+        # self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=args['scheduler']['step_size'], gamma=args['scheduler']['gamma'])
         self.criterion = torch.nn.functional.mse_loss
 
         self.best_epoch = None
@@ -77,11 +79,11 @@ class Trainer:
                                                                                                                     epoch_train_loss, epoch_val_loss))
 
             # Save best model
-            # if epoch_val_loss < self.best_val_loss:
-            #     self.best_val_loss = epoch_val_loss
-            #     self.best_model_state = copy.deepcopy(self.model.state_dict())
-            #     self.best_epoch = epoch
-            #     save_model(self.best_model_state, self.args['run_name'], epoch_train_loss, epoch_val_loss)
+            if epoch_val_loss < self.best_val_loss:
+                self.best_val_loss = epoch_val_loss
+                self.best_model_state = copy.deepcopy(self.model.state_dict())
+                self.best_epoch = epoch
+                save_model(self.best_model_state, self.args['run_name'], epoch_train_loss, epoch_val_loss)
 
         print('Training completed. Elapsed time: {}s | Best validation loss: {}'.
               format(time.time() - since, self.best_val_loss))
