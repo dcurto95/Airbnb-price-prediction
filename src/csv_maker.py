@@ -25,7 +25,8 @@ def create_preprocessed_csv(data_df, title, with_neighbourhood=True):
 
     # Change neighbourhood_group and neighbourhood
     if not with_neighbourhood:
-        data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
+        data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[
+            (data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
         data_df = data_df.drop(columns=['neighbourhood'])
 
     # Normalize numerical and One-Hot categorical
@@ -46,6 +47,7 @@ def create_preprocessed_csv(data_df, title, with_neighbourhood=True):
 
 
 if __name__ == '__main__':
+    # If cleaned dataset hasn't been created yet, set "export_clean_data = True"
     export_clean_data = False
 
     if export_clean_data:

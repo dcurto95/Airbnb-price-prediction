@@ -1,17 +1,17 @@
-from torch.utils.data import Dataset
-import torch
 import os
+
 import numpy as np
 import pandas as pd
+import torch
+from torch.utils.data import Dataset
 
 
 class AIRBNB(Dataset):
-
     """
+    Pytorch Dataset class that represents the features and targets of the Airbnb dataset.
     """
 
     def __init__(self, path='../data/', data_set='AB_NYC_2019_cleaned.csv', transform=None):
-
         data_df = pd.read_csv(os.path.join(path, data_set))
 
         self.targets = data_df['price'].to_numpy()
@@ -22,7 +22,8 @@ class AIRBNB(Dataset):
         return self.targets.shape[0]
 
     def __getitem__(self, index):
-        return torch.FloatTensor(self.features[index].astype(np.float32)), torch.FloatTensor([self.targets[index].astype(np.float32)])
+        return torch.FloatTensor(self.features[index].astype(np.float32)), torch.FloatTensor(
+            [self.targets[index].astype(np.float32)])
 
     def get_n_features(self):
         return self.n_features

@@ -470,25 +470,6 @@ def plot_bubblechart(accuracies, execution_times, labels, xlabel, ylabel, title)
                  weight='semibold')
 
 
-# def plot_bubblechart(accuracies, execution_times, reductions, labels, xlabel, ylabel, title ):
-#     plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = True
-#     plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = False
-#     colors = [plt.cm.Spectral(i / float(len(accuracies))) for i in range(len(accuracies))]
-#     x = np.arange(len(accuracies))
-#     labels_mod = list(map(lambda x: str(x[0]) + "\n (" + str(round(x[1], 2)) + "s)", zip(labels, execution_times)))
-#     execution_times_normalized = np.divide(execution_times, max(execution_times))
-#     plt.figure(figsize=(9, 8), dpi=120)
-#     plt.title(title, fontsize=16, fontweight="medium")
-#
-#     plt.scatter(reductions, accuracies, s=execution_times_normalized*30000, c=colors, alpha=0.6)
-#     plt.xlabel(xlabel)
-#     #plt.xticks(np.arange(len(labels)), labels)
-#     plt.ylabel(ylabel)
-#     for line, acc in zip(range(0, len(labels)), accuracies):
-#         plt.text(reductions[line], acc - 0.03, labels_mod[line], horizontalalignment='center', size='medium', color='black',
-#                 weight='semibold')
-
-
 def plot_bar(x, ys, col_labels, x_ticks, title):
     width = 0.35
     fig, ax = plt.subplots(figsize=(12, 7))

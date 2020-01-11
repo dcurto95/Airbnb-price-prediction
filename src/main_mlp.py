@@ -1,19 +1,17 @@
-from models import mlp
-from trainer import Trainer, Tester
+from datetime import datetime
 
 import torch
 from torch.utils.data import DataLoader
-from dataloaders.airbnb import AIRBNB
-from datetime import datetime
 
+from dataloaders.airbnb import AIRBNB
+from models import mlp
+from trainer import Trainer, Tester
 
 train_mode = False
 run_name = "Best"
 
 run_name = run_name + datetime.now().strftime('_%Y-%m-%d_%H-%M-%S')
-# Test_Pilotes_2020-01-07_22-30-16
-# Test_Pilotes_2020-01-07_20-56-05
-# Best_2020-01-11_10-39-32
+
 args = {
     'model': 'Best_2020-01-11_10-39-32',
 
@@ -25,10 +23,6 @@ args = {
 
     'optimizer': 'Adam',
     'lr': 5e-4,
-    # 'momentum': 0.9,
-
-    # 'scheduler': {'gamma': 0.3, 'milestones': [150]},
-    # 'scheduler': {'gamma': 0.3, 'step_size': 100},
 
     'batch_size': 250,
 
@@ -61,8 +55,6 @@ else:
 print('Network initialization...')
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('Running on ' + device.type)
-
-# TODO DAVIDS Check that it is able to run in GPU
 
 model = mlp.MLP(n_features, n_hidden_units=args['hidden'], activation_function=args['activation'])
 

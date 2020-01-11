@@ -1,5 +1,6 @@
-import torch
 import os
+
+import torch
 
 
 def save_model(model_state_dict, run_name, train_loss, val_loss):
