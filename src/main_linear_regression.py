@@ -36,7 +36,7 @@ if __name__ == '__main__':
     y_validation = validation_cleaned_df['price'].to_numpy()
     y_test = test_cleaned_df['price'].to_numpy()
 
-    do_regressions(x_train, y_train, x_test, y_test)
+    do_regressions(x_train, y_train, x_validation, y_validation)
 
     # ---------- FUZZY & WITH NEIGHBOURHOOD  ----------
     print("\nResults with fuzzy feature and with neighbourhood:")
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     y_validation = validation_fuzzy_df['price'].to_numpy()
     y_test = test_fuzzy_df['price'].to_numpy()
 
-    do_regressions(x_train, y_train, x_test, y_test)
+    do_regressions(x_train, y_train, x_validation, y_validation)
 
     ################# WITHOUT NEIGHBOURHOOD ###################
 
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     y_validation = validation_cleaned_df['price'].to_numpy()
     y_test = test_cleaned_df['price'].to_numpy()
 
-    do_regressions(x_train, y_train, x_test, y_test)
+    do_regressions(x_train, y_train, x_validation, y_validation)
 
     # ---------- FUZZY & WITHOUT NEIGHBOURHOOD  ----------
     print("\nResults with fuzzy feature and without neighbourhood:")
@@ -86,4 +86,4 @@ if __name__ == '__main__':
     y_validation = validation_fuzzy_df['price'].to_numpy()
     y_test = test_fuzzy_df['price'].to_numpy()
 
-    do_regressions(x_train, y_train, x_test, y_test)
+    do_regressions(x_train, y_train, x_validation, y_validation)

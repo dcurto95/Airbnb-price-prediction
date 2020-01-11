@@ -21,7 +21,7 @@ def linear_regression(x_train, y_train, x_test, y_test):
 def svr(x_train, y_train, x_test, y_test):
     # Train the model
 
-    reg_svr = SVR().fit(x_train, y_train)
+    reg_svr = SVR(kernel='rbf', gamma='scale', tol=1e-3, C=1.0, epsilon=0.1).fit(x_train, y_train)
     # Predict using x_test
     y_pred = reg_svr.predict(x_test)
 
