@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
-import numpy as np
 
 
 def show_missing_data(data):
@@ -34,6 +34,7 @@ def plot_location_distribution(data):
     plt.xlim(-74.258, -73.7)
     plt.ylim(40.49, 40.92)
 
+
 def plot_location_price_distribution(data):
     # initializing the figure size
     f = plt.figure(figsize=(10, 8))
@@ -43,7 +44,7 @@ def plot_location_price_distribution(data):
 
     # scaling the image based on the latitude and longitude max and mins for proper output
     ax.imshow(nyc_img, zorder=0, extent=[-74.258, -73.69, 40.49, 40.92])
-    #removing entries with price higher than 500 USD
+    # removing entries with price higher than 500 USD
     data = data[data.price < 500]
 
     s = ax.scatter(x=data['longitude'], y=data['latitude'], c=data['price'], alpha=0.5, zorder=5, s=10)
@@ -53,9 +54,10 @@ def plot_location_price_distribution(data):
     plt.ylabel('Latidude')
     plt.legend()
 
+
 def plot_count_neigbourhood_type(data):
     plt.figure(figsize=(15, 6))
-    #sns.countplot(data=data, x='neighbourhood_group', hue='room_type', palette='GnBu_d')
+    # sns.countplot(data=data, x='neighbourhood_group', hue='room_type', palette='GnBu_d')
     sns.barplot(x='neighbourhood_group', hue='room_type', y='price', data=data, palette='GnBu_d')
     plt.title('Counts of airbnb listings by neighbourhood group and room type', fontsize=15)
     plt.xlabel('Neighbourhood group')
@@ -86,11 +88,12 @@ def plot_most_popular_neighbourhood(data):
 
 
 def plot_data_distribution(data, columns):
-    data.hist(grid=False,  figsize=(12, 8))
+    data.hist(grid=False, figsize=(12, 8))
+
 
 def show_statistical_information(data, columns, log=False):
     for i in columns:
-        print("---------", i ,"----------")
+        print("---------", i, "----------")
         if log:
             print("Mean: ", np.exp(data[i]).mean())
             print("Std: ", np.exp(data[i]).std())
@@ -106,6 +109,7 @@ def show_data_exploration(data):
     plot_price_distribution(data)
     plot_most_popular_neighbourhood(data)
     plt.show()
+
 
 data_df = pd.read_csv('../data/AB_NYC_2019.csv')
 show_data_exploration(data_df)
