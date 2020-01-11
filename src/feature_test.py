@@ -4,8 +4,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
-
+import data_exploration
 import preprocess
+import matplotlib.pyplot as plt
+from sklearn.model_selection import GridSearchCV
 
 data_df = pd.read_csv('../data/AB_NYC_2019.csv')
 print("Original shape", data_df.shape)
@@ -16,11 +18,18 @@ data_df = preprocess.clean_dataframe(data_df)
 # Transformations
 data_df = preprocess.date_to_timestamp(data_df)
 
+#data_exploration.plot_data_distribution(data_df, ['minimum_nights'])
+
 logged_cols = ['minimum_nights', 'number_of_reviews', 'reviews_per_month', 'last_review',
                'calculated_host_listings_count', 'availability_365']
+
+
+
 for col in logged_cols:
     data_df[col] = np.log(data_df[col] + 1)
 data_df['price'] = np.log(data_df.price)
+
+#data_exploration.plot_data_distribution(data_df, ['minimum_nights'])
 
 print("Shape after cleaning and transformations", data_df.shape)
 
@@ -35,9 +44,11 @@ for neighborhood in neighbourhoods:
 data_df = df_without_outliers
 
 # Change neighbourhood_group and neighbourhood
-# data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
-# data_df = data_df.drop(columns=['neighbourhood'])
+data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood_group'] = data_df.loc[(data_df['neighbourhood_group'] == 'Manhattan'), 'neighbourhood']
+data_df = data_df.drop(columns=['neighbourhood'])
 
+#data_exploration.plot_data_distribution(data_df, ['minimum_nights'])
+#plt.show()
 
 # Normalize numerical and One-Hot categorical
 data_df = preprocess.preprocess_dataset(data_df, norm_technique='z-score', exclude_norm_cols='price')
@@ -64,7 +75,9 @@ print('\tMean squared error linear regression: %.2f' % mse_reg)
 print('\tCoefficient of determination linear regression: %.2f' % r2_reg)
 
 print("\nMulti Layer Perceptron:")
-mlp = MLPRegressor(activation='relu', max_iter=1000)
+parameters = {"hidden_layer_sizes": [(50,),(100,),(50,100, 50)],"learning_rate":["constant", "adaptive"], "activation": ["tanh", "relu"], "solver": ["sgd", "adam"], "alpha": [1e-1, 1e-2, 1e-3,1e-4]}
+mlp = GridSearchCV(MLPRegressor(max_iter=500), parameters, n_jobs=-1, verbose=10, scoring="neg_mean_squared_error")
+#mlp = MLPRegressor(activation='relu', max_iter=1000)
 mlp.fit(X_train, y_train)
 predictions = mlp.predict(X_test)
 
