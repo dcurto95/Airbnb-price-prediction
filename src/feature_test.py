@@ -11,7 +11,8 @@ from sklearn.model_selection import GridSearchCV
 
 data_df = pd.read_csv('../data/AB_NYC_2019.csv')
 print("Original shape", data_df.shape)
-
+data_exploration.plot_location_price_distribution(data_df)
+plt.show()
 # Cleaning
 data_df = preprocess.clean_dataframe(data_df)
 

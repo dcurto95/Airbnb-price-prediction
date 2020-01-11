@@ -64,11 +64,12 @@ def plot_location_price_distribution(data):
     i = urllib.request.urlopen(
         'https://upload.wikimedia.org/wikipedia/commons/e/ec/Neighbourhoods_New_York_City_Map.PNG')
     nyc_img = plt.imread(i)
+    nyc_img = plt.imread('../data/New_York_City_Color.png', 0)
     lat_long_subset_data = data[['latitude', 'longitude', 'price']].drop_duplicates()
     # scaling the image based on the latitude and longitude max and mins for proper output
     data = data[data.price <500]
     ax.imshow(nyc_img, zorder=0, extent=[-74.258, -73.69, 40.49, 40.92])
-    s = ax.scatter(x= data['longitude'], y =data['latitude'], c=data['price'], alpha=0.5, zorder=5, s=10)
+    s = ax.scatter(x= data['longitude'], y =data['latitude'], c=data['price'], alpha=0.5, zorder=5, s=10, cmap='Greys')
     cb = plt.colorbar(s)
     cb.set_label('Price')
     plt.xlabel('Longitude')
