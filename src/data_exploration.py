@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import plotly.express as px
-import urllib
+import numpy as np
 
 def show_missing_data(data):
     total = data.isnull().sum()#.sort_values(ascending=False)
@@ -21,11 +20,6 @@ def plot_correlation(data):
     #plt.title("Correlation matrix")
     plt.tight_layout()
 
-    # sns.set(font_scale=0.8)
-    # f, ax = plt.subplots(figsize=(15, 12))
-    # sns.heatmap(corrmatrix, vmax=0.8, square=True)
-    # sns.set(font_scale=0.8)
-
 
 def plot_location_distribution(data):
     plt.figure(figsize=(15, 6))
@@ -41,29 +35,10 @@ def plot_location_distribution(data):
     plt.ylim(40.49, 40.92)
 
 def plot_location_price_distribution(data):
-    # plt.figure(figsize=(15, 6))
-    # img = plt.imread('../data/New_York_City_.png', 0)
-    # coordenates_to_extent = [-74.258, -73.69, 40.49, 40.92]
-    # plt.imshow(img, zorder=0, extent=coordenates_to_extent)
-    #
-    # lat_long_subset_data = data[['latitude', 'longitude', 'price']].drop_duplicates()
-    # # lat_long_subset_data = lat_long_subset_data.pivot_table('price',['latitude','longitude'],aggfunc='average').reset_index()
-    # fig = px.scatter(lat_long_subset_data, x="latitude", y="longitude", color='price' )
-    # fig.update_layout(
-    #     xaxis_title="Latitude",
-    #     yaxis_title="Longitude",
-    #     title='Manhattan LatLong vs Price Plot'
-    # )
-    # fig.show()
-
-
     # initializing the figure size
     f  = plt.figure(figsize=(10, 8))
     ax = f.gca()
-    # loading the png NYC image found on Google and saving to my local folder along with the project
-    i = urllib.request.urlopen(
-        'https://upload.wikimedia.org/wikipedia/commons/e/ec/Neighbourhoods_New_York_City_Map.PNG')
-    nyc_img = plt.imread(i)
+    nyc_img = plt.imread('../data/New_York_City_.png', 0)
     lat_long_subset_data = data[['latitude', 'longitude', 'price']].drop_duplicates()
     # scaling the image based on the latitude and longitude max and mins for proper output
     data = data[data.price <500]
@@ -81,10 +56,11 @@ def plot_location_price_distribution(data):
 
 def plot_count_neigbourhood_type(data):
     plt.figure(figsize=(15, 6))
-    sns.countplot(data=data, x='neighbourhood_group', hue='room_type', palette='GnBu_d')
+    #sns.countplot(data=data, x='neighbourhood_group', hue='room_type', palette='GnBu_d')
+    sns.barplot(x='neighbourhood_group', hue='room_type', y='price', data=data, palette='GnBu_d')
     plt.title('Counts of airbnb listings by neighbourhood group and room type', fontsize=15)
     plt.xlabel('Neighbourhood group')
-    plt.ylabel("Count")
+    plt.ylabel("Price")
     plt.legend(frameon=False, fontsize=12)
 
 
@@ -110,13 +86,18 @@ def plot_most_popular_neighbourhood(data):
     plt.barh(x, y)
 
 def plot_data_distribution(data, columns):
+    data.hist(grid=False,  figsize=(12, 8))
+
+def show_statistical_information(data, columns):
 
     for i in columns:
         curr_col = data[i]
         print("---------", i ,"----------")
-        print("Mean: ", data[i].mean())
-        print("Std: ", data[i].std())
-        data.hist(column=i, bins=25, grid=False, figsize=(12, 8))
+        print("Mean: ", np.exp(data[i]).mean())
+        print("Std: ", np.exp(data[i]).std())
+
+
+
 
 
 def show_data_exploration(data):
