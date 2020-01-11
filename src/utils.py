@@ -1,5 +1,6 @@
-import torch
 import os
+
+import torch
 
 
 def save_model(model_state_dict, run_name, train_loss, val_loss):
@@ -14,7 +15,7 @@ def save_model(model_state_dict, run_name, train_loss, val_loss):
 
 def load_model(run_name):
     model_file = run_name + '.pth'
-    path = os.path.join('..' 'models', model_file)
+    path = os.path.join('..', 'models', model_file)
     assert os.path.isfile(path), 'Resume checkpoint not existing'
     model = torch.load(path)
     weights = model['model_state_dict']

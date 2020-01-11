@@ -1,0 +1,1 @@
+{'fuzzy': False, 'neigh': True, 'n_epochs': 1000, 'run_name': 'Best_2020-01-11_10-39-32', 'optimizer': 'Adam', 'lr': 0.0005, 'batch_size': 500, 'hidden': [300, 1], 'activation': 0}

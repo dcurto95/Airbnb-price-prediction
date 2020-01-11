@@ -119,5 +119,6 @@ def removal_of_outliers(df, filter_by, filter_value, target, distance):
     q3 = filtered_data.quantile(0.75)
     IQR = q3 - q1
 
-    cleaned = df[(df[filter_by] == filter_value) & (df[target] > (q1 - distance * IQR)) & (df[target] < (q3 + distance * IQR))]
+    cleaned = df[
+        (df[filter_by] == filter_value) & (df[target] > (q1 - distance * IQR)) & (df[target] < (q3 + distance * IQR))]
     return cleaned

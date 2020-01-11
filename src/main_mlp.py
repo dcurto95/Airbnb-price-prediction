@@ -1,35 +1,37 @@
-from models import mlp
-from trainer import Trainer, Tester
+from datetime import datetime
 
 import torch
 from torch.utils.data import DataLoader
+
 from dataloaders.airbnb import AIRBNB
-from datetime import datetime
+from models import mlp
+from trainer import Trainer, Tester
 
-
-train_mode = True
-run_name = "Test_Pilotes"
+train_mode = False
+run_name = "Best"
 
 run_name = run_name + datetime.now().strftime('_%Y-%m-%d_%H-%M-%S')
-args = {
-    'fuzzy': False,
 
-    'n_epochs': 10000,
+args = {
+    'model': 'Best_2020-01-11_10-39-32',
+
+    'fuzzy': False,
+    'neigh': True,
+
+    'n_epochs': 1000,
     'run_name': run_name,
 
-    'optimizer': 'SGD',
-    'lr': 1e-4,
-    'momentum': 0.9,
+    'optimizer': 'Adam',
+    'lr': 5e-4,
 
-    # 'scheduler': {'gamma': 0.5, 'milestones': [5, 100, 200, 300, 400, 500, 600, 700, 800]},
+    'batch_size': 250,
 
-    'batch_size': 'all',
-
-    'hidden': [500, 250, 50, 1],
+    'hidden': [300, 1],
     'activation': mlp.RELU
 }
 
 dataset_name = 'fuzzy' if args['fuzzy'] else 'cleaned'
+dataset_name = dataset_name if args['neigh'] else dataset_name + '_wo_Neigh'
 
 # ########## DATASETS AND DATALOADERS ##########
 print('Preparing datasets...')
@@ -37,7 +39,7 @@ print('Preparing datasets...')
 if train_mode:
     train_set = AIRBNB(path='../data/', data_set='train_' + dataset_name + '.csv')
     val_set = AIRBNB(path='../data/', data_set='validation_' + dataset_name + '.csv')
-    train_loader = DataLoader(train_set, batch_size=len(train_set), shuffle=True, num_workers=0, pin_memory=True)
+    train_loader = DataLoader(train_set, batch_size=args['batch_size'], shuffle=True, num_workers=0, pin_memory=True)
     val_loader = DataLoader(val_set, batch_size=len(val_set), shuffle=False, num_workers=0, pin_memory=True)
     test_loader = None
     n_features = train_set.get_n_features()
@@ -45,7 +47,7 @@ if train_mode:
 else:
     train_loader, val_loader = None, None
     test_set = AIRBNB(path='../data/', data_set='test_' + dataset_name + '.csv')
-    test_loader = DataLoader(test_set, batch_size=len(test_set), shuffle=False, num_workers=4, pin_memory=True)
+    test_loader = DataLoader(test_set, batch_size=len(test_set), shuffle=False, num_workers=0, pin_memory=True)
     n_features = test_set.get_n_features()
 
 
@@ -53,8 +55,6 @@ else:
 print('Network initialization...')
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('Running on ' + device.type)
-
-# TODO DAVIDS Check that it is able to run in GPU
 
 model = mlp.MLP(n_features, n_hidden_units=args['hidden'], activation_function=args['activation'])
 
