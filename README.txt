@@ -25,3 +25,11 @@ This project is composed by 5 main files, each one with its purpose:
  
  All the needed .csv files will be provided so you don't have to create them again. They will all
  be located in the "data" directory.
+ 
+ Also, at the "src/src_fuzzy" folder, we can see the MATLAB files used to generate the fuzzy 
+ dataset from the "AB_NYC_2019_cleaned.csv". As you can see, there are two files: 
+ 
+ - "*.fis" which is the fuzzy expert system.
+ - "*.m" is a MATLAB script which opens the previously mentioned .csv, imports it into the fuzzy 
+ system, calculates the output for the 3 given inputs and then creates the 
+ "AB_NYC_2019_fuzzy.csv" file.
